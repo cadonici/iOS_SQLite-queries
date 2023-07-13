@@ -1,0 +1,10 @@
+/*Show original file name of all  the assets in the gallery imported by WhatsApp sorted by EXIF timestamp:*/
+
+SELECT 
+ZORIGINALFILENAME AS "Original file name",
+ZIMPORTEDBYBUNDLEIDENTIFIER AS "Bundle ID",
+ZIMPORTEDBYDISPLAYNAME AS "Imported by",
+ZEXIFTIMESTAMPSTRING AS "EXIF timestamp" 
+FROM ZADDITIONALASSETATTRIBUTES
+WHERE ZIMPORTEDBYDISPLAYNAME ='‎WhatsApp'
+ORDER BY "EXIF timestamp" ASC
