@@ -1,0 +1,10 @@
+/* Database: ChatStorage.sqlite
+filter ID and name of all WhatsApp groups */
+
+SELECT ZCONTACTJID,
+ZPARTNERNAME
+FROM
+ZWACHATSESSION
+WHERE
+ZCONTACTJID LIKE "%@g.us%"
+ORDER BY ZPARTNERNAME ASC
