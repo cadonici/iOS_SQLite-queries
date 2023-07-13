@@ -1,3 +1,5 @@
+/*Show all assets in the gallery sorted by save date:*/
+
 SELECT 
 Z_PK AS "File ID",
 ZFILENAME AS "File",
