@@ -1,2 +1,2 @@
 # iOS_SQLite-queries
- Just a bunch of SQlite queries that are useful for manually parsing iOS databases or embedding in scripts
+ Just a bunch of SQlite queries for manually parsing iOS databases or being embedded in scripts.
