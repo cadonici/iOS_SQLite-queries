@@ -1,0 +1,41 @@
+/*
+    iOS Screen Time Analysis Query for Camera App (UTC)
+    -------------------------------------------------
+
+    This SQL query is designed to be executed on the iOS RMAdminStore-Local.sqlite database,
+    providing valuable insights into the usage patterns of the "com.apple.camera" app.
+
+    The query retrieves detailed information for each time block, focusing on local time.
+    It includes data such as screen time, number of notifications, number of pickups,
+    block duration, and timestamps for the start, end, first pickup, last event,
+    longest session start, and the longest session ends in Coordinated Universal Time (UTC) format
+*/
+
+SELECT
+    datetime('2001-01-01', "ZSTARTDATE" || ' seconds')  AS "Start date (UTC)",
+    ZUSAGETIMEDITEM.ZBUNDLEIDENTIFIER AS "App",
+    ZUSAGETIMEDITEM.ZTOTALTIMEINSECONDS AS "Screen time in seconds (single app)",
+	ZUSAGECOUNTEDITEM.ZNUMBEROFNOTIFICATIONS AS "Number of notifications",
+    ZUSAGECOUNTEDITEM.ZNUMBEROFPICKUPS AS "Number of Pickups",
+    ZUSAGEBLOCK.ZDURATIONINMINUTES AS "Block duration in minutes",
+    ZUSAGEBLOCK.ZNUMBEROFPICKUPSWITHOUTAPPLICATIONUSAGE AS "Number of pickups without application",
+    strftime('%M:%S', ZUSAGEBLOCK.ZSCREENTIMEINSECONDS, 'unixepoch') AS "Total block screen time (mm:ss)",
+    datetime('2001-01-01', "ZUSAGEBLOCK.ZFIRSTPICKUPDATE" || ' seconds') AS "First pickup date (UTC)",
+    datetime('2001-01-01', ZUSAGEBLOCK.ZLASTEVENTDATE || ' seconds') AS "Last event date (UTC)",
+    datetime('2001-01-01', ZUSAGEBLOCK.ZLONGESTSESSIONENDDATE || ' seconds') AS "Longest session end date (UTC)",
+    datetime('2001-01-01', ZUSAGEBLOCK.ZLONGESTSESSIONSTARTDATE || ' seconds') AS "Longest session start date (UTC)"
+FROM
+    ZUSAGETIMEDITEM
+
+JOIN
+    ZUSAGECATEGORY ON ZUSAGETIMEDITEM.ZCATEGORY = ZUSAGECATEGORY.Z_PK
+JOIN
+    ZUSAGEBLOCK ON ZUSAGECATEGORY.ZBLOCK = ZUSAGEBLOCK.Z_PK
+	
+LEFT JOIN
+    ZUSAGECOUNTEDITEM ON ZUSAGETIMEDITEM.ZBUNDLEIDENTIFIER = ZUSAGECOUNTEDITEM.ZBUNDLEIDENTIFIER AND ZUSAGECATEGORY.ZBLOCK = ZUSAGECOUNTEDITEM.ZBLOCK
+
+WHERE ZUSAGETIMEDITEM.ZBUNDLEIDENTIFIER = "com.apple.camera"
+	
+ORDER BY
+    ZUSAGECATEGORY.ZBLOCK ASC;

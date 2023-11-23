@@ -1,0 +1,10 @@
+SELECT
+Z_PK,
+ZFILENAME AS "File",
+ZTRASHEDSTATE,
+datetime('2001-01-01', "ZTRASHEDDATE" || ' seconds') AS "Trashed Date",
+datetime('2001-01-01', "ZDATECREATED" || ' seconds') AS "Creation Date",
+datetime('2001-01-01', "ZADDEDDATE" || ' seconds') AS "Added Date"
+FROM ZASSET
+WHERE ZTRASHEDSTATE = 1
+ORDER BY Z_PK;

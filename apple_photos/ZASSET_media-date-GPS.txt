@@ -1,0 +1,10 @@
+SELECT
+            Z_PK,
+            ZFILENAME,
+            datetime('2001-01-01', "{date_column}" || ' seconds', '{offset} hours') AS "Date ({timezone_input})"
+            datetime('2001-01-01', "{date_column}" || ' seconds') AS "Date (UTC)",
+            CASE WHEN ZLONGITUDE = -180.0 AND ZLATITUDE = -180.0 THEN NULL ELSE ZLONGITUDE END AS "Longitude",
+            CASE WHEN ZLONGITUDE = -180.0 AND ZLATITUDE = -180.0 THEN NULL ELSE ZLATITUDE END AS "Latitude"
+        FROM ZASSET
+        WHERE "Date ({timezone_input})" >= "{start_datetime}" AND "Date ({timezone_input})" <= "{end_datetime}"
+        ORDER BY Z_PK
