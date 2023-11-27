@@ -1,0 +1,21 @@
+/*
+    iOS Time Frame Analysis Query for Camera App (UTC Format)
+    ---------------------------------------------------------
+
+    This SQL query is meticulously designed for execution on the iOS knowledgeC.db database,
+    offering valuable insights into the usage patterns of the "com.apple.camera" app.
+
+    The query extracts detailed information for each time frame, including the precise start and end times of usage, reported in the universal timezone UTC format.
+*/
+
+
+SELECT DISTINCT
+ZVALUESTRING as "App",
+datetime('2001-01-01', "ZSTARTDATE" || ' seconds') as "Start date",
+datetime('2001-01-01', "ZENDDATE" || ' seconds') as "End date"
+
+
+
+FROM ZOBJECT
+
+WHERE "App" = "com.apple.camera" 

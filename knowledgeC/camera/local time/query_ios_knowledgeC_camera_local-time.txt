@@ -1,0 +1,20 @@
+/*
+    iOS Time Frame Analysis Query for Camera App (local time)
+    ---------------------------------------------------------
+
+    This SQL query is specifically crafted for execution on the iOS knowledgeC.db database,
+    providing insightful details into the usage patterns of the "com.apple.camera" app.
+
+    The query retrieves comprehensive information for each time frame, including the exact start and end times of usage, reported in the local time zone.
+*/
+
+
+
+SELECT DISTINCT
+  ZVALUESTRING as "App",
+  strftime('%Y-%m-%d %H:%M:%S', "ZSTARTDATE" + 978307200, 'unixepoch',  'localtime') as "Start date (local time)",
+  strftime('%Y-%m-%d %H:%M:%S', "ZENDDATE" + 978307200, 'unixepoch',  'localtime') as "End date (local time)"
+
+ 
+FROM ZOBJECT
+WHERE "App" = "com.apple.camera"
