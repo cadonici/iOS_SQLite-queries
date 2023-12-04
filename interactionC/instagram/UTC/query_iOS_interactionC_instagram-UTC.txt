@@ -1,0 +1,19 @@
+SELECT 
+  CASE
+    WHEN ZBUNDLEID = 'com.apple.mobileslideshow' THEN 'Apple Photos'
+    ELSE ZBUNDLEID
+  END AS "Source App",
+  CASE
+    WHEN ZTARGETBUNDLEID = 'com.burbn.instagram.shareextension' THEN 'Instagram'
+    ELSE ZTARGETBUNDLEID
+  END AS "Target App",
+  ZGROUPNAME AS "Contact",
+  CASE ZDIRECTION
+    WHEN 1 THEN 'Outgoing'
+    WHEN 0 THEN 'Incoming'
+  END AS "Direction",
+  datetime('2001-01-01', "ZCREATIONDATE" || ' seconds') AS "Creation date (UTC)",
+  datetime('2001-01-01', "ZSTARTDATE" || ' seconds') AS "Start Date (UTC)",
+  datetime('2001-01-01', "ZENDDATE" || ' seconds') AS "End Date (UTC)"
+FROM ZINTERACTIONS
+WHERE ZBUNDLEID = "com.apple.mobileslideshow" AND ZTARGETBUNDLEID = "com.burbn.instagram.shareextension";
