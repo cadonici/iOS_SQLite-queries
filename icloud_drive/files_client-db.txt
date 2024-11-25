@@ -23,10 +23,10 @@ SELECT
         WHEN client_items.item_sharing_options = 1 THEN 'Yes'
         ELSE 'No'
     END AS 'Is Shared?',
-    CASE 
-        WHEN client_items.item_trash_put_back_path IS NULL OR client_items.item_trash_put_back_path = '' THEN 'No'
-        ELSE client_items.item_trash_put_back_path
-    END AS 'Recently Deleted'
+CASE
+    WHEN client_items.item_trash_put_back_path IS NULL OR client_items.item_trash_put_back_path = '' THEN 'No'
+    ELSE 'Deleted from: ' || client_items.item_trash_put_back_path
+END AS 'Recently Deleted'
 FROM client_items
 LEFT JOIN app_libraries ON client_items.app_library_rowid = app_libraries.rowid
 WHERE app_libraries.app_library_name IN ('com.apple.Keynote', 'com.apple.CloudDocs')
