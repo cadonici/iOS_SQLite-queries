@@ -1,0 +1,39 @@
+-- This query retrieves details of files deleted from iCloud Drive by analyzing the 'cloud.db' database
+SELECT
+    CASE
+        WHEN app_libraries.app_library_name = 'com.apple.CloudDocs' THEN 'iCloud Drive'
+        WHEN app_libraries.app_library_name = 'com.apple.Keynote' THEN 'Apple Keynote'
+        ELSE app_libraries.app_library_name
+    END AS 'App',
+    client_items.item_filename AS 'Filename',
+    CASE
+        WHEN client_items.version_size IS NULL OR client_items.version_size = 0 OR client_items.version_size = '' THEN '/'
+        ELSE client_items.version_size
+    END AS 'Size',
+    CASE
+        WHEN client_items.version_size IS NULL OR client_items.version_size = 0 OR client_items.version_size = '' THEN 'Folder'
+        ELSE 'File'
+    END AS 'Type',
+    DATETIME(client_items.item_birthtime, 'unixepoch') AS 'Created',
+    DATETIME(client_items.version_mtime, 'unixepoch') AS 'Modified',
+    CASE
+        WHEN client_items.item_lastusedtime = 0 THEN '/'
+        ELSE DATETIME(client_items.item_lastusedtime, 'unixepoch')
+    END AS 'Last opened',
+    CASE
+        WHEN client_items.item_sharing_options = 1 THEN 'Yes'
+        ELSE 'No'
+    END AS 'Is Shared?',
+    CASE
+        WHEN client_items.item_trash_put_back_path IS NOT NULL AND client_items.item_trash_put_back_path != '' THEN
+            CASE
+                WHEN client_items.item_filename = client_items.item_trash_put_back_path THEN 'Deleted Folder'
+                ELSE 'Original path: ' || client_items.item_trash_put_back_path
+            END
+        ELSE 'No'
+    END AS 'Recently Deleted'
+FROM client_items
+LEFT JOIN app_libraries ON client_items.app_library_rowid = app_libraries.rowid
+WHERE app_libraries.app_library_name IN ('com.apple.Keynote', 'com.apple.CloudDocs')
+  AND (client_items.item_trash_put_back_path IS NOT NULL AND client_items.item_trash_put_back_path != '')
+ORDER BY "Last opened" DESC;
