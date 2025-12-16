@@ -39,13 +39,13 @@ Notes
 
 
 SELECT
-  id   AS Facebook ID,
-  name AS Contact,
+  id   AS "Facebook ID",
+  name AS "Contact",
   CASE
     WHEN blocked_by_viewer_status = 2 THEN 'Blocked'
     ELSE CAST(blocked_by_viewer_status AS TEXT)
-  END AS Status,
-  datetime((blocked_since_timestamp_ms  1000), 'unixepoch') AS Blocked since (UTC)
+  END AS "Status",
+  datetime(blocked_since_timestamp_ms / 1000, 'unixepoch') AS "Blocked since (UTC)"
 FROM contacts
 WHERE blocked_by_viewer_status = 2
    OR blocked_since_timestamp_ms IS NOT NULL
