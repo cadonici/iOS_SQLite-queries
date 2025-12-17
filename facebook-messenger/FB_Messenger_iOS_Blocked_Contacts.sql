@@ -1,5 +1,4 @@
-
-Purpose
+/*Purpose
 This SQLite query is intended for the forensic analysis of the
 Facebook Messenger database extracted from an iOS device.
 
@@ -35,7 +34,7 @@ Use case
 
 Notes
 - blocked_by_viewer_status = 2 indicates a blocked contact
-- blocked_since_timestamp_ms is stored as Unix epoch in milliseconds
+- blocked_since_timestamp_ms is stored as Unix epoch in milliseconds */
 
 
 SELECT
