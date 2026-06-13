@@ -28,9 +28,6 @@
 --     decoding (e.g. a small Python script).
 --   * Column names can vary across versions. If ZMESSAGEDATE does not exist in
 --     your schema, replace it with ZSENTDATE or ZTIMESTAMP.
---   * Timestamps are Apple Core Data (Cocoa) time: seconds since 2001-01-01 UTC.
---     The '+2 hours' modifier converts to a local time (here CEST). Adjust or
---     remove it for your timezone / to keep UTC.
 --
 -- Usage:
 --   Always work on a copy of the database, never the original evidence file.
@@ -40,13 +37,16 @@
 -- =============================================================================
 
 SELECT
-    datetime('2001-01-01', reply.ZMESSAGEDATE || ' seconds', '+2 hours') AS local_datetime,
+    datetime('2001-01-01', reply.ZMESSAGEDATE || ' seconds') AS datetime_UTC,
     CASE reply.ZISFROMME WHEN 1 THEN 'sent' ELSE 'received' END          AS direction,
     reply.Z_PK        AS msg_pk,
     reply.ZTEXT       AS msg_text,
     '⤷ replies to'    AS relationship,
     orig.Z_PK         AS quoted_pk,
-    orig.ZFROMJID     AS quoted_from,
+    CASE
+        WHEN orig.ZISFROMME = 1 THEN 'owner'
+        ELSE orig.ZFROMJID
+    END               AS quoted_from,
     orig.ZTEXT        AS quoted_text
 FROM ZWAMESSAGE reply
 JOIN ZWACHATSESSION cs   ON reply.ZCHATSESSION = cs.Z_PK
